@@ -10,7 +10,7 @@
 ## 配置环境变量
 - GOROOT
 目的是告诉一些其他程序(如IDE)golang安装包安装在哪里
-![](img/goroot.png)
+![](img/GOROOT.png)
 - PATH
 目的是可以系统中直接运行go.exe,而无需进入到安装目录
 ![](img/path.png)
@@ -30,14 +30,14 @@ golang的包类似java的jar、c++的lib.golang的包管理类似nodejs的npm、
 ## Hello GOLang
 - 新建一个hellogolang.go文件
 ```go
-    package main
+     package main
      import "fmt"
 
      func main() {
      	fmt.Println("Hello Golang")
      }
 ```
-- WebStorm 11 会要求配置下go目录,这好像一个bug.
+- WebStorm 11 会要求配置下go目录,按照步骤设置.ps:这好像一个bug.
 ![](img/设置SDK.png)
 
 - 鼠标右键,RUN.
@@ -50,6 +50,8 @@ golang的包类似java的jar、c++的lib.golang的包管理类似nodejs的npm、
 ## 结构体
 
 ## 变量定义
+
+## 这里应该有指针
 
 ## 常用数据结构
 
