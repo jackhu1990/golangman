@@ -120,7 +120,8 @@ s := []string      {"one","two"} //slice
 m := map[int]string{1:"one", 2:"two"} //map
 
 ```
-### array和slice
+- array和slice
+
     和c有区别,在Go中，数组是值。
     将一个数组赋予另一个数组会复制其所有元素。so,若将某个数组传入某个函数，它将接收到该数组的一份副本而非指针。
     数组的大小是其类型的一部分。类型 [10]int 和 [20]int 是不同的。
