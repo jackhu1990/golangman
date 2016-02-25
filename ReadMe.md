@@ -46,29 +46,117 @@ golang的包类似java的jar、c++的lib.golang的包管理类似nodejs的npm、
 # 第二章 语言只是语言
 
 ## 基础数据类型
+```go
+
+int8 int16 int32 int64
+uint8 uint16...
+float32 float 64
+string
+bool
+
+```
 
 ## 结构体
+```go
+
+type PersonBase struct{
+	Name string
+	Age int
+}
+type Boy struct{
+	Person PersonBase
+	Sex string
+}
+
+var person PersonBase
+
+```
 
 ## 变量定义
+- var
+```go
+var inputCount  uint32
+var(
+    inputCount  uint32
+    outputCount uint32
+    errorCount  uint32
+)
+inputCount = 1024
+```
+- var简写
+```go
+
+inputCount := 1024
+
+```
 
 ## 这里应该有指针
+```go
+
+    var inputCountP *int
+    var person PersonBase
+    var personP *PersonBase
+    person.Name = "jackhu"
+    person.Age = 27
+    personP = new(PersonBase)
+    personP.Name = "gaofei"
+    personP.Age = 27
+
+```
 
 ## 常用数据结构
+```go
+
+arr :=[...] int {1,2,3,4,5}
+
+```
 
 ## 条件控制语句
 - if
+```go
+    if i := 10; i < 5 {
+        fmt.Print("***********")
+    }
+```
 - switch
 - select
 - for
+```go
+
+    sum := 0
+    for i := 0; i < 10; i++ {
+        sum += i
+    }
+    arr :=[...] int {1,2,3,4,5}
+    for i,v:= range arr{
+        fmt.Println("index:", i, "value:", v)
+    }
+    index: 0 value: 1
+    index: 1 value: 2
+    index: 2 value: 3
+    index: 3 value: 4
+    index: 4 value: 5
+
+```
 
 ## 函数
 - 定义
+```go
+
+func Add(addA int, addB int) (result int){
+    result = addA + addB
+    return
+}
+
+```
 - 两个返回值
 - error
 
 ## 这里没有类吗
 - 类函数
+
 - interface
+>按照约定，只包含一个方法的接口应当以该方法的名称加上-er后缀或类似的修饰来构造一个施动着名词，如 Reader、Writer、 Formatter、CloseNotifier 等。
 
 ## defer
 
