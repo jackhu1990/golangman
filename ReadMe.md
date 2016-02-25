@@ -41,4 +41,5 @@ WebStorm 11 会要求配置下go目录,这好像一个bug.
 ![](img/设置SDK.png)
 
 鼠标右键,RUN.
+![](img/hellogolang.png)
 
