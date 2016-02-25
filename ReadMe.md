@@ -240,6 +240,17 @@ error可以假装理解为内置的类型(实际是接口),返回时errors.New("
 >按照约定，只包含一个方法的接口应当以该方法的名称加上-er后缀或类似的修饰来构造一个施动着名词，如 Reader、Writer、 Formatter、CloseNotifier 等。
 
 ## defer
+就是javascript中的promise模式,angularjs中的$q服务
+这里比他们都要简单,加上defer的语句保证在函数return之后执行.
+非常优秀的设计,简化了异常情况下资源释放的问题.比如文件打开,打开后就defer close.这样即使有异常,文件也会被关闭.
+```go
+
+file,err:=os.Open(fullPath)
+if err!=nil{
+    return nil,err
+}
+defer file.Close()
+```
 
 ## go
 
