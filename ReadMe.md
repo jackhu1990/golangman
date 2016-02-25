@@ -28,4 +28,18 @@ golang的包类似java的jar、c++的lib.golang的包管理类似nodejs的npm、
     ![](img/go插件.png)
 
 ## Hello GOLang
+新建一个hellogolang.go文件
+'package main
 
+ import "fmt"
+
+ func main() {
+ 	fmt.Println("Hello Golang")
+ }
+'
+WebStorm 11 会要求配置下go目录,这好像一个bug.
+![](img/设置SDK.png)
+
+鼠标右键,RUN.
+
+#第二章 语言只是语言
