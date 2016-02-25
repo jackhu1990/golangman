@@ -27,3 +27,5 @@ golang的包类似java的jar、c++的lib.golang的包管理类似nodejs的npm、
 - 安装 WebStorm使用的go插件
     ![](img/go插件.png)
 
+## Hello GOLang
+
