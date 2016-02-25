@@ -29,17 +29,51 @@ golang的包类似java的jar、c++的lib.golang的包管理类似nodejs的npm、
 
 ## Hello GOLang
 新建一个hellogolang.go文件
-'package main
+'''go
 
- import "fmt"
+    package main
+     import "fmt"
 
- func main() {
- 	fmt.Println("Hello Golang")
- }
-'
+     func main() {
+     	fmt.Println("Hello Golang")
+     }
+
+'''
 WebStorm 11 会要求配置下go目录,这好像一个bug.
 ![](img/设置SDK.png)
 
 鼠标右键,RUN.
 ![](img/hellogolang.png)
 
+# 第二章 语言只是语言
+
+## 基础数据类型
+
+## 结构体
+
+## 变量定义
+
+## 常用数据结构
+
+## 条件控制语句
+- if
+- switch
+- select
+- for
+
+## 函数
+- 定义
+- 两个返回值
+- error
+
+## 这里没有类吗
+- 类函数
+- interface
+
+## defer
+
+## go
+
+## 恐慌panic与恢复recover
+
+# 第三章 从写个工具开始
