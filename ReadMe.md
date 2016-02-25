@@ -50,7 +50,7 @@ golang的包类似java的jar、c++的lib.golang的包管理类似nodejs的npm、
 
 int8 int16 int32 int64
 uint8 uint16...
-float32 float 64
+float32 float64
 string
 bool
 
@@ -104,12 +104,17 @@ inputCount := 1024
 
 ```
 
-## 常用数据结构
+## 常用复合数据类型
 ```go
 
-arr :=[...] int {1,2,3,4,5}
+a := [...]string   {"one","two"} //array
+s := []string      {"one","two"} //slice
+m := map[int]string{1:"one", 2:"two"} //map
 
 ```
+array和slice区别
+array是固定分配,不可更改
+slice是动态分配,可以更改
 
 ## 条件控制语句
 - if
@@ -127,15 +132,21 @@ arr :=[...] int {1,2,3,4,5}
     for i := 0; i < 10; i++ {
         sum += i
     }
-    arr :=[...] int {1,2,3,4,5}
-    for i,v:= range arr{
-        fmt.Println("index:", i, "value:", v)
-    }
+	arr :=[...] int {1,2,3,4,5}
+	for i,v:= range arr{
+		fmt.Println("index:", i, "value:", v)
+	}
+	m := map[int]string{1:"one", 2:"two"}
+	for i,v:= range m{
+		fmt.Println("index:", i, "value:", v)
+	}
     index: 0 value: 1
     index: 1 value: 2
     index: 2 value: 3
     index: 3 value: 4
     index: 4 value: 5
+    index: 1 value: one
+    index: 2 value: two
 
 ```
 
@@ -143,14 +154,37 @@ arr :=[...] int {1,2,3,4,5}
 - 定义
 ```go
 
-func Add(addA int, addB int) (result int){
-    result = addA + addB
-    return
+func Add(addA int, addB int) (int){
+    result := addA + addB
+    return result
 }
 
 ```
 - 两个返回值
+```go
+
+func Add(addA int, addB int) (int, error){
+    if addA==0 {
+        return 0,errors.New("第一个参数不能为0")
+    }
+    result := addA + addB
+    return result,nil
+}
+func main() {
+        fmt.Println("Hello Golang")
+        result,err := Add(0,10)
+        if err != nil {
+            fmt.Println(err)
+            return
+        }
+        fmt.Println(result)
+}
+    Hello Golang
+    第一个参数不能为0
+
+```
 - error
+error可以假装理解为内置的类型(实际是接口),返回时errors.New("第一个参数不能为0")这样即可.
 
 ## 这里没有类吗
 - 类函数
@@ -161,6 +195,10 @@ func Add(addA int, addB int) (result int){
 ## defer
 
 ## go
+
+## chan
+
+## make
 
 ## 恐慌panic与恢复recover
 
