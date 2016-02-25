@@ -1,7 +1,7 @@
 # 第零章 说明
 - 本项目针对具有一定开发经验的开发者,不面向初学者.
 - golangman中golang表示语言,man表示linux man命令.
-- 本文档可任意分发下载,但必须指明出处且不得删除本章..
+- 本文档可任意转载,但必须指明出处且不得删除本说明.
 - 如果本文档对你有帮助,请给一颗星.https://github.com/jackhu1990/golangman.
 
 # 第一章 快速开始
@@ -74,9 +74,11 @@ type Boy struct{
 	Sex string
 }
 
+
 var person PersonBase
 
 ```
+type 类似c/c++中 typedef
 
 ## 变量定义
 - var
@@ -118,9 +120,38 @@ s := []string      {"one","two"} //slice
 m := map[int]string{1:"one", 2:"two"} //map
 
 ```
-array和slice区别
-array是固定分配,不可更改
-slice是动态分配,可以更改
+### array和slice
+    和c有区别,在Go中，数组是值。
+    将一个数组赋予另一个数组会复制其所有元素。so,若将某个数组传入某个函数，它将接收到该数组的一份副本而非指针。
+    数组的大小是其类型的一部分。类型 [10]int 和 [20]int 是不同的。
+    array是固定分配,不可更改.在详细规划内存布局时，数组是非常有用的，有时还能避免过多的内存分配， 但它们主要用作切片的构件。
+    切片保存了对底层数组的引用，若你将某个切片赋予另一个切片，它们会引用同一个数组。 若某个函数将一个切片作为参数传入，则它对该切片元素的修改对调用者而言同样可见， 这可以理解为传递了底层数组的指针。
+    简单来说,数组是值,切片类似指针,指向数组.其他遵循值拷贝.
+
+
+```go
+
+func test(slice []string)(){
+	slice[2]="y"
+	return
+}
+func main() {
+	s := []string{"1","2","3"}
+	s1:= s;
+	for i,v:=range s {
+		fmt.Println(i, v)
+	}
+	s1[2]="w";
+	for i,v:=range s {
+		fmt.Println(i, v)
+	}
+	test(s1)
+	for i,v:=range s {
+		fmt.Println(i, v)
+	}
+}
+
+```
 
 ## 条件控制语句
 - if
