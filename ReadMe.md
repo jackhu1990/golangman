@@ -1,4 +1,8 @@
-[TOC]
+# 第零章 说明
+- 本项目针对具有一定开发经验的开发者,不面向初学者.
+- golangman中golang表示语言,man表示linux man命令.
+- 本文档可任意分发下载,但必须指明出处且不得删除本章..
+- 如果本文档对你有帮助,请给一颗星.https://github.com/jackhu1990/golangman.
 
 # 第一章 快速开始
 
