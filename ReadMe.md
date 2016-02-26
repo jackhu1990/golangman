@@ -237,6 +237,39 @@ error可以假装理解为内置的类型(实际是接口),返回时errors.New("
 - 类函数
 
 - interface
+```go
+
+package main
+
+import "fmt"
+
+type Animal interface {
+	Grow()
+	Move(string) string
+}
+type Cat struct{
+	Name string
+	Age int32
+	Address string
+}
+func (cat *Cat) Grow(){
+	cat.Age++
+}
+func (cat *Cat)Move(newAdddress string)(oldAddress string){
+	oldAddress = cat.Address
+	cat.Address = newAdddress
+	return
+}
+
+func main() {
+	myCat := Cat{"Little C", 2, "In the house"}
+	animal, ok := interface{}(&myCat).(Animal)
+	animal.Grow()
+	fmt.Printf("%v, %v\n", ok, animal)
+}
+true, &{Little C 3 In the house}
+
+```
 >按照约定，只包含一个方法的接口应当以该方法的名称加上-er后缀或类似的修饰来构造一个施动着名词，如 Reader、Writer、 Formatter、CloseNotifier 等。
 
 ## defer
@@ -253,13 +286,156 @@ defer file.Close()
 ```
 
 ## go
-
+go 相当轻量级线程,其实是croutine的go实现.相当golang语言本身集成了线程库的一些工程.
 ## chan
-
+简单理解:通道的目的就是为了go程序线程同步用的
 ## make
 >内建函数 make(T, args) 的目的不同于 new(T)。它只用于创建切片、映射和信道，并返回类型为 T（而非 *T）的一个已初始化 （而非置零）的值。 出现这种用差异的原因在于，这三种类型本质上为引用数据类型，它们在使用前必须初始化。 例如，切片是一个具有三项内容的描述符，包含一个指向（数组内部）数据的指针、长度以及容量， 在这三项被初始化之前，该切片为 nil。对于切片、映射和信道，make 用于初始化其内部的数据结构并准备好将要使用的值。
 
-## 恐慌panic与恢复recover
+go chan make slice 综合小例子
+```go
 
-# 第三章 从写个工具开始
+package main
+
+import "fmt"
+
+func sum(a []int, c chan int) {
+	sum := 0
+	for _, v := range a {
+		sum += v
+	}
+	c <- sum //将和送入c
+}
+
+func main() {
+	a := []int{1, 2, 3, 4, 5, 6}
+
+	c := make(chan int)
+
+	go sum(a[len(a)/2:], c)
+	go sum(a[:len(a)/2], c)
+
+	x, y := <-c, <-c //从c中获取
+
+	fmt.Println(x,"+", y,"=", x+y)
+}
+
+
+```
+## 恐慌panic与恢复recover
+类似c++,java中的异常.panic就是抛出异常,recover就是捕获异常.
+```go
+
+package main
+
+import (
+	"errors"
+	"fmt"
+)
+
+func innerFunc() {
+	defer func(){ //尝试移动本段代码查看效果
+		if p:=recover(); p!=nil{
+			fmt.Printf("Fatal error: %s\n",p)
+		}
+	}()
+	fmt.Println("Enter innerFunc")
+	panic(errors.New("Occur a panic!"))
+	fmt.Println("Quit innerFunc")
+}
+
+func outerFunc() {
+
+	fmt.Println("Enter outerFunc")
+	innerFunc()
+	fmt.Println("Quit outerFunc")
+}
+
+func main() {
+	fmt.Println("Enter main")
+	outerFunc()
+	fmt.Println("Quit main")
+}
+
+    Enter main
+    Enter outerFunc
+    Enter innerFunc
+    Fatal error: Occur a panic!
+    Quit outerFunc
+    Quit main
+
+
+```
+
+# 第三章 从写些小工具开始
+
+- 字符串操作
+```go
+
+package main
+
+import (
+	"fmt"
+	"strings"
+)
+
+func main() {
+	name := "harry potty"
+	arr := strings.Split(name, " ")
+	fmt.Println(arr)
+	arr2 := strings.Join(arr, "#")
+	fmt.Println(arr2)
+	str := strings.Replace(name, "harry", "\\t", -1)
+	fmt.Println(str)
+}
+
+[harry potty]
+harry#potty
+\t potty
+
+
+```
+- json操作
+
+```go
+
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+)
+
+type Person struct {
+	Name string
+	Age  int
+}
+type Girl struct {
+	Person Person
+	Sex    bool
+}
+
+func main() {
+	defer func() {
+		fmt.Println("程序结束了")
+	}()
+	person := Person{"胡彦春", 18}
+	gilr := Girl{person, true}
+	b, err := json.Marshal(gilr)
+	if err != nil {
+		fmt.Print(err)
+	}
+	fmt.Print(string(b))
+
+}
+
+{"Person":{"Name":"胡彦春","Age":18},"Sex":true}程序结束了
+
+```
+
+- 文件操作
+
+- websocket
+
+- options
 

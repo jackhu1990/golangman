@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 )
 
 type PersonBase struct {
@@ -14,21 +14,21 @@ type Boy struct {
 	Sex    string
 }
 
-func Add(addA int, addB int) (int, error){
-	if addA==0 {
-		return 0,errors.New("第一个参数不能为0")
+func Add(addA int, addB int) (int, error) {
+	if addA == 0 {
+		return 0, errors.New("第一个参数不能为0")
 	}
 	result := addA + addB
-	return result,nil
+	return result, nil
 }
-func test(slice []string)(){
-	slice[2]="y"
+func test(slice []string) {
+	slice[2] = "y"
 	return
 }
 func main() {
 	fmt.Println("Hello Golang")
 
-	result,err := Add(0,10)
+	result, err := Add(0, 10)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -45,26 +45,25 @@ func main() {
 	personP.Name = "gaofei"
 	personP.Age = 27
 
-	arr :=[...] int {1,2,3,4,5}
-	for i,v:= range arr{
+	arr := [...]int{1, 2, 3, 4, 5}
+	for i, v := range arr {
 		fmt.Println("index:", i, "value:", v)
 	}
-	m := map[int]string{1:"one", 2:"two"}
-	for i,v:= range m{
+	m := map[int]string{1: "one", 2: "two"}
+	for i, v := range m {
 		fmt.Println("index:", i, "value:", v)
 	}
-	s := []string{"1","2","3"}
-	s1:= s;
-	for i,v:=range s {
+	s := []string{"1", "2", "3"}
+	s1 := s
+	for i, v := range s {
 		fmt.Println(i, v)
 	}
-	s1[2]="w";
-	for i,v:=range s {
+	s1[2] = "w"
+	for i, v := range s {
 		fmt.Println(i, v)
 	}
 	test(s1)
-	for i,v:=range s {
+	for i, v := range s {
 		fmt.Println(i, v)
 	}
 }
-
