@@ -172,7 +172,13 @@ func main() {
     }
 ```
 - switch
+
+和c/c++不同,go中switch更加现代化,支持string之类的类型
+
 - select
+
+socket编程中的select函数在概念上类似,更加简化.不懂select的先学习socket编程中的select,可以很好的理解.
+
 - for
 ```go
 
@@ -301,8 +307,8 @@ true, &{Little C 3 In the house}
 >按照约定，只包含一个方法的接口应当以该方法的名称加上-er后缀或类似的修饰来构造一个施动着名词，如 Reader、Writer、 Formatter、CloseNotifier 等。
 
 ## defer
-就是javascript中的promise模式,angularjs中的$q服务
-这里比他们都要简单,加上defer的语句保证在函数return之后执行.
+就是javascript中的promise模式,angularjs中的$q服务.这里比他们都要简单.
+defer的语句保证在函数return之后执行.
 非常优秀的设计,简化了异常情况下资源释放的问题.比如文件打开,打开后就defer close.这样即使有异常,文件也会被关闭.
 ```go
 
@@ -314,7 +320,7 @@ defer file.Close()
 ```
 
 ## go
-go 相当轻量级线程,其实是croutine的go实现.相当golang语言本身集成了线程库的一些工程.
+go 相当轻量级线程,其实是croutine的go实现.相当golang语言本身集成了线程库的一些功能.
 ## chan
 简单理解:通道的目的就是为了go程序线程同步用的
 ## make
