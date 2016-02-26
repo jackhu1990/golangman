@@ -604,6 +604,8 @@ func httpGet() {
 
 - 文件操作
 
+- redis
+
 - websocket
 ```go
 
