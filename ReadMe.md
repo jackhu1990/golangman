@@ -28,7 +28,7 @@ golang的包类似java的jar、c++的lib.golang的包管理类似nodejs的npm、
 ![](img/gopath目录.png)
 
 ## 安装IDE
-个人喜好,因为我很喜欢WebStorm开发js,所以安装了WebStorm的go插件,个人可自行改变,但根据我试用多个IDE或代码编辑器的情况,强烈推荐WebStorm..
+个人喜好,因为我很喜欢WebStorm开发js,所以安装了WebStorm的go插件,个人可自行改变,但根据我试用多个IDE或代码编辑器的情况,强烈推荐WebStorm,其他ide光是调试功能就能把人玩死.
 - WebStorm 11以上版本
 - 安装 WebStorm使用的go插件
     ![](img/go插件.png)
@@ -164,6 +164,18 @@ func main() {
 
 ```
 
+- chan
+
+管道符号<-
+简单理解:通道的目的就是为了go程序线程同步用的,类似管道pipe.
+一边流入,一边流出.流出检测时如果没有数据,则一直阻塞住.
+
+[详细信息](http://www.imooc.com/code/7555)
+
+- make
+>内建函数 make(T, args) 的目的不同于 new(T)。它只用于创建切片、映射和信道，并返回类型为 T（而非 *T）的一个已初始化 （而非置零）的值。 出现这种用差异的原因在于，这三种类型本质上为引用数据类型，它们在使用前必须初始化。 例如，切片是一个具有三项内容的描述符，包含一个指向（数组内部）数据的指针、长度以及容量， 在这三项被初始化之前，该切片为 nil。对于切片、映射和信道，make 用于初始化其内部的数据结构并准备好将要使用的值。
+[详细信息](http://docscn.studygolang.com/doc/effective_go.html#make分配)
+
 ## 条件控制语句
 - if
 ```go
@@ -173,11 +185,54 @@ func main() {
 ```
 - switch
 
-和c/c++不同,go中switch更加现代化,支持string之类的类型
+和c/c++不同,go中switch更加现代化,支持string之类的类型.同时需要注意,go中的switch不需要主动写break.
+```go
+
+var name string
+switch name {
+case "Golang":
+    fmt.Println("A programming language from Google.")
+case "Rust":
+    fmt.Println("A programming language from Mozilla.")
+default:
+    fmt.Println("Unknown!")
+}
+
+```
+[更多switch用法](http://docscn.studygolang.com/doc/effective_go.html#switch)
 
 - select
 
 socket编程中的select函数在概念上类似,更加简化.不懂select的先学习socket编程中的select,可以很好的理解.
+```go
+
+package main
+
+import "fmt"
+
+func main() {
+	ch4 := make(chan int, 1)
+	ch4 <- 1
+	for i := 0; i < 4; i++ {
+		select {
+		case e, ok := <-ch4:
+			if !ok {
+				fmt.Println("End.")
+				return
+			}
+			fmt.Println(e)
+
+		default:
+			fmt.Println("No Data!")
+			close(ch4)
+		}
+	}
+}
+    1
+    No Data!
+    End.
+
+```
 
 - for
 ```go
@@ -304,6 +359,26 @@ func main() {
 true, &{Little C 3 In the house}
 
 ```
+- 接口的类型转换
+关于接口,"接口的类型转换"这个知识点请仔细理解.实例中还有switch特殊的类型选择用法.
+
+```go
+//类型选择是类型转换的一种形式：它接受一个接口，在选择 （switch）中根据其判断选择对应的情况（case）， 并在某种意义上将其转换为该种类型。
+// 若它已经为字符串，我们需要该接口中实际的字符串值； 若它有 String 方法，我们则需要调用该方法所得的结果。
+type Stringer interface {
+	String() string
+}
+
+var value interface{} // 调用者提供的其他类型值,需要转换成接口类型。
+switch str := value.(type) {
+case string:
+	return str
+case Stringer:
+	return str.String()
+}
+
+```
+
 >按照约定，只包含一个方法的接口应当以该方法的名称加上-er后缀或类似的修饰来构造一个施动着名词，如 Reader、Writer、 Formatter、CloseNotifier 等。
 
 ## defer
@@ -319,14 +394,11 @@ if err!=nil{
 defer file.Close()
 ```
 
-## go
-go 相当轻量级线程,其实是croutine的go实现.相当golang语言本身集成了线程库的一些功能.
-## chan
-简单理解:通道的目的就是为了go程序线程同步用的
-## make
->内建函数 make(T, args) 的目的不同于 new(T)。它只用于创建切片、映射和信道，并返回类型为 T（而非 *T）的一个已初始化 （而非置零）的值。 出现这种用差异的原因在于，这三种类型本质上为引用数据类型，它们在使用前必须初始化。 例如，切片是一个具有三项内容的描述符，包含一个指向（数组内部）数据的指针、长度以及容量， 在这三项被初始化之前，该切片为 nil。对于切片、映射和信道，make 用于初始化其内部的数据结构并准备好将要使用的值。
+## go程
 
-go chan make slice 综合小例子
+go程相当轻量级线程,其实是croutine的go实现.相当golang语言本身集成了线程库的一些功能.同时,go程是golang高并发的核心.
+
+go程 chan make slice 综合小例子
 ```go
 
 package main
@@ -477,10 +549,223 @@ func main() {
 {"Person":{"Name":"胡彦春","Age":18},"Sex":true}程序结束了
 
 ```
+- httpServer
+```go
+
+package main
+
+import (
+"net/http"
+)
+
+func SayHello(w http.ResponseWriter, req *http.Request) {
+w.Write([]byte("Hello"))
+}
+
+func main() {
+http.HandleFunc("/hello", SayHello)
+http.ListenAndServe(":8001", nil)
+
+}
+
+访问 http://localhost:8001/hello 返回Helo
+
+```
+
+- http Get Post操作
+```go
+
+package main
+
+import (
+	"net/http"
+	"io/ioutil"
+	"fmt"
+)
+
+func httpGet() {
+	resp, err := http.Get("http://localhost:8001/hello")
+	if err != nil {
+		// handle error
+	}
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		// handle error
+	}
+
+	fmt.Println(string(body))
+}
+
+```
+[POST操作等更多信息](http://www.01happy.com/golang-http-client-get-and-post/)
+
 
 - 文件操作
 
 - websocket
+```go
+
+package main
+
+import (
+	"flag"
+	"html/template"
+	"log"
+	"net/http"
+
+	"github.com/gorilla/websocket"
+)
+
+var addr = flag.String("addr", "localhost:8080", "http service address")
+
+var upgrader = websocket.Upgrader{} // use default options
+
+func echo(w http.ResponseWriter, r *http.Request) {
+	c, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Print("upgrade:", err)
+		return
+	}
+	defer c.Close()
+	for {
+		mt, message, err := c.ReadMessage()
+		if err != nil {
+			log.Println("read:", err)
+			break
+		}
+		log.Printf("recv: %s", message)
+		err = c.WriteMessage(mt, message)
+		if err != nil {
+			log.Println("write:", err)
+			break
+		}
+	}
+}
+
+func home(w http.ResponseWriter, r *http.Request) {
+	homeTemplate.Execute(w, "ws://"+r.Host+"/echo")
+}
+
+func main() {
+	flag.Parse()
+	log.SetFlags(0)
+	http.HandleFunc("/echo", echo)
+	http.HandleFunc("/", home)
+	log.Fatal(http.ListenAndServe(*addr, nil))
+}
+
+var homeTemplate = template.Must(template.New("").Parse(`
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<script>
+window.addEventListener("load", function(evt) {
+    var output = document.getElementById("output");
+    var input = document.getElementById("input");
+    var ws;
+    var print = function(message) {
+        var d = document.createElement("div");
+        d.innerHTML = message;
+        output.appendChild(d);
+    };
+    document.getElementById("open").onclick = function(evt) {
+        if (ws) {
+            return false;
+        }
+        ws = new WebSocket("{{.}}");
+        ws.onopen = function(evt) {
+            print("OPEN");
+        }
+        ws.onclose = function(evt) {
+            print("CLOSE");
+            ws = null;
+        }
+        ws.onmessage = function(evt) {
+            print("RESPONSE: " + evt.data);
+        }
+        ws.onerror = function(evt) {
+            print("ERROR: " + evt.data);
+        }
+        return false;
+    };
+    document.getElementById("send").onclick = function(evt) {
+        if (!ws) {
+            return false;
+        }
+        print("SEND: " + input.value);
+        ws.send(input.value);
+        return false;
+    };
+    document.getElementById("close").onclick = function(evt) {
+        if (!ws) {
+            return false;
+        }
+        ws.close();
+        return false;
+    };
+});
+</script>
+</head>
+<body>
+<table>
+<tr><td valign="top" width="50%">
+<p>Click "Open" to create a connection to the server,
+"Send" to send a message to the server and "Close" to close the connection.
+You can change the message and send multiple times.
+<p>
+<form>
+<button id="open">Open</button>
+<button id="close">Close</button>
+<p><input id="input" type="text" value="Hello world!">
+<button id="send">Send</button>
+</form>
+</td><td valign="top" width="50%">
+<div id="output"></div>
+</td></tr></table>
+</body>
+</html>
+`))
+
+```
+[更多websocket例子](https://github.com/gorilla/websocket/tree/master/examples)
 
 - options
+比自带的flag更强大的命令行工具,帮助服务器程序自动生成命令行
 
+```go
+
+package main
+
+import (
+    "github.com/voxelbrain/goptions"
+    "os"
+    "time"
+)
+
+func main() {
+    options := struct {
+        Servers  []string      `goptions:"-s, --server, obligatory, description='Servers to connect to'"`
+        Password string        `goptions:"-p, --password, description='Don\\'t prompt for password'"`
+        Timeout  time.Duration `goptions:"-t, --timeout, description='Connection timeout in seconds'"`
+        Help     goptions.Help `goptions:"-h, --help, description='Show this help'"`
+
+        goptions.Verbs
+        Execute struct {
+            Command string   `goptions:"--command, mutexgroup='input', description='Command to exectute', obligatory"`
+            Script  *os.File `goptions:"--script, mutexgroup='input', description='Script to exectute', rdonly"`
+        } `goptions:"execute"`
+        Delete struct {
+            Path  string `goptions:"-n, --name, obligatory, description='Name of the entity to be deleted'"`
+            Force bool   `goptions:"-f, --force, description='Force removal'"`
+        } `goptions:"delete"`
+    }{ // Default values goes here
+        Timeout: 10 * time.Second,
+    }
+    goptions.ParseAndFail(&options)
+}
+
+```
+
+[更多列子](https://github.com/voxelbrain/goptions)

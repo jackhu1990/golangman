@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io/ioutil"
+)
 
 type Animal interface {
 	Grow()
