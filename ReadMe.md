@@ -235,9 +235,36 @@ func main() {
 error可以假装理解为内置的类型(实际是接口),返回时errors.New("第一个参数不能为0")这样即可.
 
 ## 这里没有类吗
+没有类,但是有结构体,有结构体函数.模拟类的功能.
+google官方编程规范规定,包和结构体中变量名大写表示对外暴露,小写表示不对外暴露.相当于其他语言共有私有标识.此规则很多第三方接口遵守,请也遵守.
 - 类函数
+```go
 
+package main
+
+import "fmt"
+
+type Cat struct {
+	Name    string
+	Age     int32
+	Address string
+}
+
+func (cat *Cat) Grow() {
+	cat.Age++
+}
+func main() {
+	myCat := Cat{"Little C", 2, "In the house"}
+	myCat.Grow()
+	fmt.Printf("%v", myCat)
+}
+
+{Little C 3 In the house}
+
+```
 - interface
+go interface效果和java的interface,c++的抽象类相同,但是不用显示声明.
+go中规定,接口不用显示声明,结构体函数如果实现接口的函数,就相当于类继承了这个接口,请结合代码理解.
 ```go
 
 package main
@@ -368,6 +395,15 @@ func main() {
 
 ```
 
+## 最后说下包
+
+包可以自定义,可以从网上下载.
+从网上下载github上的[websocket包](github.com/gorilla/websocket),在命令行上敲入
+```
+go get github.com/gorilla/websocket
+```
+
+
 # 第三章 从写些小工具开始
 
 - 字符串操作
@@ -410,6 +446,7 @@ import (
 type Person struct {
 	Name string
 	Age  int
+	secret string
 }
 type Girl struct {
 	Person Person
@@ -420,13 +457,14 @@ func main() {
 	defer func() {
 		fmt.Println("程序结束了")
 	}()
-	person := Person{"胡彦春", 18}
+	person := Person{"胡彦春", 18, "秘密是小写的,不会出现在json中,很有意思的特性"}
 	gilr := Girl{person, true}
 	b, err := json.Marshal(gilr)
 	if err != nil {
 		fmt.Print(err)
 	}
 	fmt.Print(string(b))
+
 
 }
 
