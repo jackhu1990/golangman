@@ -771,3 +771,7 @@ func main() {
 ```
 
 [更多列子](https://github.com/voxelbrain/goptions)
+
+- 更多知识点
+更多资料请访问
+[中文站文档资料站](http://docscn.studygolang.com/doc/)
