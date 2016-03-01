@@ -12,6 +12,7 @@
       <root url="file://D:/快盘/Coding/GOPATH/src/github.com/derekparker/delve/dwarf/frame/testdata" />
       <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/go/ssa/interp/testdata" />
       <root url="file://D:/快盘/Coding/GOPATH/src/github.com/rogpeppe/godef/go/printer/testdata" />
+      <root url="file://D:/快盘/Coding/GOPATH/src/github.com/pebbe/zmq4/.git" />
       <root url="file://D:/快盘/Coding/GOPATH/src/github.com/gorilla/websocket/.git" />
       <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/cmd/guru/testdata" />
       <root url="file://D:/快盘/Coding/GOPATH/src/github.com/garyburd/redigo/.git" />

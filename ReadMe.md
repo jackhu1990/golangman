@@ -774,6 +774,8 @@ func main() {
 
 - 更多知识点
 
+.() 接口类型断言  x.(y) 断言x中的条目实现了y
+
  [FAQ](http://docscn.studygolang.com/doc/faq#Google使用Go)
 
  [中文站文档资料站](http://docscn.studygolang.com/doc/)
