@@ -619,7 +619,99 @@ func httpGet() {
 
 - 文件操作
 
+基本上和c操作文件没有大区别,概念都一样
+
+```go
+
+package main
+
+import (
+    "bufio"
+    "bytes"
+    "fmt"
+    "io"
+    "os"
+    "path/filepath"
+)
+
+func read(r io.Reader) ([]byte, error) {
+    br := bufio.NewReader(r)
+    var buf bytes.Buffer
+    for {
+        ba, isPrefix, err := br.ReadLine()
+        if err != nil {
+            if err == io.EOF {
+                break
+            }
+        }
+        buf.Write(ba)
+        if !isPrefix {
+            buf.WriteByte('\n')
+        }
+    }
+    return buf.Bytes(), nil
+}
+func readFile(filename string) ([]byte, error) {
+    parentPath, err := os.Getwd()
+    if err != nil {
+        return nil, err
+    }
+    fullPath := filepath.Join(parentPath, filename)
+    file, err := os.Open(fullPath)
+    if err != nil {
+        return nil, err
+    }
+    defer file.Close()
+    return read(file)
+}
+func main() {
+    fileName := "example/FileTest.go"
+    data, err := readFile(fileName)
+    if err != nil {
+        fmt.Printf("erris%v", err)
+    }
+    fmt.Printf("Thecontentof'%s':\n%s\n", fileName, data)
+}
+
+
+```
+
 - redis
+
+
+```go
+
+package main
+
+import (
+    "github.com/garyburd/redigo/redis"
+    "fmt"
+    "time"
+)
+
+func main() {
+    conn , err := redis.DialTimeout("tcp", "127.0.0.1:6379", 0, 1*time.Second, 1*time.Second)
+    if err != nil {
+        panic(err)
+    }
+    defer conn.Close()
+    size ,err:= conn.Do("DBSIZE")
+    fmt.Printf("size is %d \n",size)
+
+    _,err = conn.Do("SET","user:user0",123)
+    _,err = conn.Do("SET","user:user1",456)
+    _,err = conn.Do("APPEND","user:user0",87)
+
+    user0,err := redis.Int(conn.Do("GET","user:user0"))
+    user1,err := redis.Int(conn.Do("GET","user:user1"))
+
+    fmt.Printf("user0 is %d , user1 is %d \n",user0,user1)
+}
+
+
+```
+
+[更多例子](https://github.com/garyburd/redigo/tree/master/redis)
 
 - websocket
 ```go
