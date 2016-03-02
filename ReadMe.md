@@ -1,8 +1,9 @@
 # 第零章 说明
-- 本项目针对具有一定开发经验的开发者,不面向初学者.
 - golangman中golang表示语言,man表示linux man命令.
-- 本文档可任意转载,但必须指明出处且不得删除本说明.
-- 如果本文档对你有帮助,请给一颗星.https://github.com/jackhu1990/golangman.
+- 本项目针对具有一定开发经验的开发者,不面向初学者.
+- 如同man命令一样,本项目不能代替官方完整文档,更多的起到了解、帮助与速查的功能.
+- 本项目可任意转载,但必须指明出处且不得删除本说明.
+- 如果本项目对你有帮助,请给一颗星.https://github.com/jackhu1990/golangman.
 
 # 第一章 快速开始
 
@@ -169,6 +170,7 @@ func main() {
 管道符号<-
 简单理解:通道的目的就是为了go程序线程同步用的,类似管道pipe.
 一边流入,一边流出.流出检测时如果没有数据,则一直阻塞住.
+某种程度上可以把通道当作一种锁来用().当然golang自身有mutex的包.
 
 [详细信息](http://www.imooc.com/code/7555)
 
@@ -428,6 +430,8 @@ func main() {
 
 
 ```
+谈到线程就避免不了锁的概念,golang中有mutex,适当的使用chan也是一种不错的选择,用法和其他语言所得用法一样,这里就不举例了.
+
 ## 恐慌panic与恢复recover
 类似c++,java中的异常.panic就是抛出异常,recover就是捕获异常.
 ```go
@@ -493,6 +497,7 @@ github上的很多go包，在linux上安装可能很简单，比如[zmq4]（http
 这里总结，纯go包跨平台，cgo不算跨平台。
 ![windows](img/mingw.png)
 ![linux](img/linuxlib.png)
+
 
 
 
@@ -618,7 +623,99 @@ func httpGet() {
 
 - 文件操作
 
+基本上和c操作文件没有大区别,概念都一样
+
+```go
+
+package main
+
+import (
+    "bufio"
+    "bytes"
+    "fmt"
+    "io"
+    "os"
+    "path/filepath"
+)
+
+func read(r io.Reader) ([]byte, error) {
+    br := bufio.NewReader(r)
+    var buf bytes.Buffer
+    for {
+        ba, isPrefix, err := br.ReadLine()
+        if err != nil {
+            if err == io.EOF {
+                break
+            }
+        }
+        buf.Write(ba)
+        if !isPrefix {
+            buf.WriteByte('\n')
+        }
+    }
+    return buf.Bytes(), nil
+}
+func readFile(filename string) ([]byte, error) {
+    parentPath, err := os.Getwd()
+    if err != nil {
+        return nil, err
+    }
+    fullPath := filepath.Join(parentPath, filename)
+    file, err := os.Open(fullPath)
+    if err != nil {
+        return nil, err
+    }
+    defer file.Close()
+    return read(file)
+}
+func main() {
+    fileName := "example/FileTest.go"
+    data, err := readFile(fileName)
+    if err != nil {
+        fmt.Printf("erris%v", err)
+    }
+    fmt.Printf("Thecontentof'%s':\n%s\n", fileName, data)
+}
+
+
+```
+
 - redis
+
+
+```go
+
+package main
+
+import (
+    "github.com/garyburd/redigo/redis"
+    "fmt"
+    "time"
+)
+
+func main() {
+    conn , err := redis.DialTimeout("tcp", "127.0.0.1:6379", 0, 1*time.Second, 1*time.Second)
+    if err != nil {
+        panic(err)
+    }
+    defer conn.Close()
+    size ,err:= conn.Do("DBSIZE")
+    fmt.Printf("size is %d \n",size)
+
+    _,err = conn.Do("SET","user:user0",123)
+    _,err = conn.Do("SET","user:user1",456)
+    _,err = conn.Do("APPEND","user:user0",87)
+
+    user0,err := redis.Int(conn.Do("GET","user:user0"))
+    user1,err := redis.Int(conn.Do("GET","user:user1"))
+
+    fmt.Printf("user0 is %d , user1 is %d \n",user0,user1)
+}
+
+
+```
+
+[更多例子](https://github.com/garyburd/redigo/tree/master/redis)
 
 - websocket
 ```go
@@ -626,12 +723,12 @@ func httpGet() {
 package main
 
 import (
-	"flag"
-	"html/template"
-	"log"
-	"net/http"
+    "flag"
+    "html/template"
+    "log"
+    "net/http"
 
-	"github.com/gorilla/websocket"
+    "github.com/gorilla/websocket"
 )
 
 var addr = flag.String("addr", "localhost:8080", "http service address")
@@ -639,25 +736,25 @@ var addr = flag.String("addr", "localhost:8080", "http service address")
 var upgrader = websocket.Upgrader{} // use default options
 
 func echo(w http.ResponseWriter, r *http.Request) {
-	c, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		log.Print("upgrade:", err)
-		return
-	}
-	defer c.Close()
-	for {
-		mt, message, err := c.ReadMessage()
-		if err != nil {
-			log.Println("read:", err)
-			break
-		}
-		log.Printf("recv: %s", message)
-		err = c.WriteMessage(mt, message)
-		if err != nil {
-			log.Println("write:", err)
-			break
-		}
-	}
+    c, err := upgrader.Upgrade(w, r, nil)
+    if err != nil {
+        log.Print("upgrade:", err)
+        return
+    }
+    defer c.Close()
+    for {
+        mt, message, err := c.ReadMessage()
+        if err != nil {
+            log.Println("read:", err)
+            break
+        }
+        log.Printf("recv: %s", message)
+        err = c.WriteMessage(mt, message)
+        if err != nil {
+            log.Println("write:", err)
+            break
+        }
+    }
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -665,82 +762,86 @@ func home(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	flag.Parse()
-	log.SetFlags(0)
-	http.HandleFunc("/echo", echo)
-	http.HandleFunc("/", home)
-	log.Fatal(http.ListenAndServe(*addr, nil))
+    flag.Parse()
+    log.SetFlags(0)
+    http.HandleFunc("/echo", echo)
+    http.HandleFunc("/", home)
+    log.Fatal(http.ListenAndServe(*addr, nil))
 }
 
 var homeTemplate = template.Must(template.New("").Parse(`
 <!DOCTYPE html>
-<head>
-<meta charset="utf-8">
-<script>
-window.addEventListener("load", function(evt) {
-    var output = document.getElementById("output");
-    var input = document.getElementById("input");
-    var ws;
-    var print = function(message) {
-        var d = document.createElement("div");
-        d.innerHTML = message;
-        output.appendChild(d);
-    };
-    document.getElementById("open").onclick = function(evt) {
-        if (ws) {
+    <head>
+    <meta charset="utf-8">
+    <script>
+    window.addEventListener("load", function(evt) {
+        var output = document.getElementById("output");
+        var input = document.getElementById("input");
+        var ws;
+        var print = function(message) {
+            var d = document.createElement("div");
+            d.innerHTML = message;
+            output.appendChild(d);
+        };
+        document.getElementById("open").onclick = function(evt) {
+            if (ws) {
+                return false;
+            }
+            ws = new WebSocket("{{.}}");
+            ws.onopen = function(evt) {
+                print("OPEN");
+            }
+            ws.onclose = function(evt) {
+                print("CLOSE");
+                ws = null;
+            }
+            ws.onmessage = function(evt) {
+                print("RESPONSE: " + evt.data);
+            }
+            ws.onerror = function(evt) {
+                print("ERROR: " + evt.data);
+            }
             return false;
-        }
-        ws = new WebSocket("{{.}}");
-        ws.onopen = function(evt) {
-            print("OPEN");
-        }
-        ws.onclose = function(evt) {
-            print("CLOSE");
-            ws = null;
-        }
-        ws.onmessage = function(evt) {
-            print("RESPONSE: " + evt.data);
-        }
-        ws.onerror = function(evt) {
-            print("ERROR: " + evt.data);
-        }
-        return false;
-    };
-    document.getElementById("send").onclick = function(evt) {
-        if (!ws) {
+        };
+        document.getElementById("send").onclick = function(evt) {
+            if (!ws) {
+                return false;
+            }
+            print("SEND: " + input.value);
+            ws.send(input.value);
             return false;
-        }
-        print("SEND: " + input.value);
-        ws.send(input.value);
-        return false;
-    };
-    document.getElementById("close").onclick = function(evt) {
-        if (!ws) {
+        };
+        document.getElementById("close").onclick = function(evt) {
+            if (!ws) {
+                return false;
+            }
+            ws.close();
             return false;
-        }
-        ws.close();
-        return false;
-    };
-});
-</script>
-</head>
-<body>
-<table>
-<tr><td valign="top" width="50%">
-<p>Click "Open" to create a connection to the server,
-"Send" to send a message to the server and "Close" to close the connection.
-You can change the message and send multiple times.
-<p>
-<form>
-<button id="open">Open</button>
-<button id="close">Close</button>
-<p><input id="input" type="text" value="Hello world!">
-<button id="send">Send</button>
-</form>
-</td><td valign="top" width="50%">
-<div id="output"></div>
-</td></tr></table>
-</body>
+        };
+    });
+    </script>
+    </head>
+    <body>
+    <table>
+        <tr>
+            <td valign="top" width="50%">
+                <p>Click "Open" to create a connection to the server,
+                "Send" to send a message to the server and "Close" to close the connection.
+                You can change the message and send multiple times.
+                <p>
+            <form>
+                <button id="open">Open</button>
+                <button id="close">Close</button>
+                <p><input id="input" type="text" value="Hello world!">
+                <button id="send">Send</button>
+            </form>
+            </td>
+            <td valign="top" width="50%">
+                <div id="output"></div>
+            </td>
+        </tr>
+        </table>
+    </body>
 </html>
 `))
 
@@ -786,10 +887,95 @@ func main() {
 
 [更多列子](https://github.com/voxelbrain/goptions)
 
+
+- zmq
+
+server
+```go
+
+package main
+
+import (
+    zmq "github.com/pebbe/zmq4"
+    "github.com/pebbe/zmq4/examples/kvsimple"
+
+    "fmt"
+    "math/rand"
+    "time"
+)
+
+func main() {
+    //  Prepare our context and publisher socket
+    publisher, _ := zmq.NewSocket(zmq.PUB)
+    publisher.Bind("tcp://*:5556")
+    time.Sleep(200 * time.Millisecond)
+
+    kvmap := make(map[string]*kvsimple.Kvmsg)
+    rand.Seed(time.Now().UnixNano())
+
+    sequence := int64(1)
+    for ; true; sequence++ {
+        //  Distribute as key-value message
+        kvmsg := kvsimple.NewKvmsg(sequence)
+        kvmsg.SetKey(fmt.Sprint(rand.Intn(10000)))
+        kvmsg.SetBody(fmt.Sprint(rand.Intn(1000000)))
+        err := kvmsg.Send(publisher)
+        kvmsg.Store(kvmap)
+        if err != nil {
+            break
+        }
+    }
+    fmt.Printf("Interrupted\n%d messages out\n", sequence)
+}
+
+```
+
+client
+
+```go
+
+package main
+
+import (
+    zmq "github.com/pebbe/zmq4"
+    "github.com/pebbe/zmq4/examples/kvsimple"
+
+    "fmt"
+)
+
+func main() {
+    //  Prepare our context and updates socket
+    fmt.Println("zmq test")
+    updates, _ := zmq.NewSocket(zmq.SUB)
+    updates.SetSubscribe("")
+    updates.Connect("tcp://localhost:5556")
+
+    kvmap := make(map[string]*kvsimple.Kvmsg)
+
+    sequence := int64(0)
+    for ; true; sequence++ {
+        kvmsg, err := kvsimple.RecvKvmsg(updates)
+        if err != nil {
+            break //  Interrupted
+        }
+        fmt.Println(kvmsg.GetBody())
+        kvmsg.Store(kvmap)
+    }
+    fmt.Printf("Interrupted\n%d messages in\n", sequence)
+}
+
+
+```
+
+
 - 更多知识点
 
 .() 接口类型断言  x.(y) 断言x中的条目实现了y
 
- [FAQ](http://docscn.studygolang.com/doc/faq#Google使用Go)
+- FAQ
 
- [中文站文档资料站](http://docscn.studygolang.com/doc/)
+    [FAQ](http://docscn.studygolang.com/doc/faq#Google使用Go)
+
+- 中文站
+
+    [中文站文档资料站](http://docscn.studygolang.com/doc/)

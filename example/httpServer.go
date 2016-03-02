@@ -1,15 +1,15 @@
 package main
 
 import (
-"net/http"
+	"net/http"
 )
 
 func SayHello(w http.ResponseWriter, req *http.Request) {
-w.Write([]byte("Hello"))
+	w.Write([]byte("Hello"))
 }
 
 func main() {
-http.HandleFunc("/hello", SayHello)
-http.ListenAndServe(":8001", nil)
+	http.HandleFunc("/hello", SayHello)
+	http.ListenAndServe(":8001", nil)
 
 }

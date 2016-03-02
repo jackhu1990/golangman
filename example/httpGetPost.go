@@ -1,9 +1,9 @@
 package main
 
 import (
-	"net/http"
-	"io/ioutil"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 )
 
 func httpGet() {
@@ -20,4 +20,3 @@ func httpGet() {
 
 	fmt.Println(string(body))
 }
-

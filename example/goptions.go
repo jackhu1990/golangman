@@ -15,13 +15,13 @@ func main() {
 
 		goptions.Verbs
 		Execute struct {
-				 Command string   `goptions:"--command, mutexgroup='input', description='Command to exectute', obligatory"`
-				 Script  *os.File `goptions:"--script, mutexgroup='input', description='Script to exectute', rdonly"`
-			 } `goptions:"execute"`
+			Command string   `goptions:"--command, mutexgroup='input', description='Command to exectute', obligatory"`
+			Script  *os.File `goptions:"--script, mutexgroup='input', description='Script to exectute', rdonly"`
+		} `goptions:"execute"`
 		Delete struct {
-				 Path  string `goptions:"-n, --name, obligatory, description='Name of the entity to be deleted'"`
-				 Force bool   `goptions:"-f, --force, description='Force removal'"`
-			 } `goptions:"delete"`
+			Path  string `goptions:"-n, --name, obligatory, description='Name of the entity to be deleted'"`
+			Force bool   `goptions:"-f, --force, description='Force removal'"`
+		} `goptions:"delete"`
 	}{ // Default values goes here
 		Timeout: 10 * time.Second,
 	}
