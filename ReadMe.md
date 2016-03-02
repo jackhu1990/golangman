@@ -491,6 +491,8 @@ github上的很多go包，在linux上安装可能很简单，比如[zmq4]（http
 最后运行时，需要把dll或者so文件拷贝到go程序目录里。
 
 这里总结，纯go包跨平台，cgo不算跨平台。
+![windows](img/mingw.png)
+![linux](img/linuxlib.png)
 
 
 
