@@ -1,46 +1,12 @@
 <component name="libraryTable">
   <library name="GOPATH &lt;golangman&gt;">
     <CLASSES>
-      <root url="file://D:/快盘/Coding/GOPATH/src/sourcegraph.com" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/9fans.net" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/github.com" />
+      <root url="file://$USER_HOME$/gopath/src/github.com" />
     </CLASSES>
     <SOURCES />
     <excluded>
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/cmd/cover/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/github.com/derekparker/delve/dwarf/frame/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/go/ssa/interp/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/github.com/rogpeppe/godef/go/printer/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/github.com/pebbe/zmq4/.git" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/github.com/gorilla/websocket/.git" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/cmd/guru/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/github.com/garyburd/redigo/.git" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/sourcegraph.com/sqs/goreturns/_samples" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/go/gccgoimporter/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/github.com/derekparker/delve/_fixtures" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/go/pointer/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/go/types/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/refactor/eg/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/github.com/nsf/gocode/_testing" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/go/gcimporter15/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/cmd/bundle/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/github.com/nsf/gocode/_goremote" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/go/gcimporter/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/github.com/nsf/gocode/_gccgo" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/github.com/voxelbrain/goptions/.git" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/go/loader/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/github.com/golang/lint/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/go/callgraph/rta/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/cmd/vet/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/go/callgraph/cha/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/cmd/fiximports/testdata" />
+      <root url="file://$USER_HOME$/gopath/src/github.com/pebbe/zmq4/.git" />
       <root url="file://$PROJECT_DIR$" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/go/ssa/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/cmd/callgraph/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/go/ssa/ssautil/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/cmd/stringer/testdata" />
-      <root url="file://D:/快盘/Coding/GOPATH/src/golang.org/x/tools/oracle/testdata" />
     </excluded>
   </library>
 </component>
