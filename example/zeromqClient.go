@@ -25,5 +25,6 @@ func main() {
 		fmt.Println(kvmsg.GetBody())
 		kvmsg.Store(kvmap)
 	}
+
 	fmt.Printf("Interrupted\n%d messages in\n", sequence)
 }
