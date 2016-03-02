@@ -45,5 +45,6 @@ func main() {
 	if err != nil {
 		fmt.Printf("erris%v", err)
 	}
-	fmt.Printf("Thecontentof'%s':\n%s\n", fileName, data)
+	fmt.Printf("Thecontentof'%s':\n%s\n ", fileName, data)
+
 }
