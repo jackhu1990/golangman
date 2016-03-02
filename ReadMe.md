@@ -473,13 +473,25 @@ func main() {
 
 ```
 
-## 最后说下包
+## 说下包
 
 包可以自定义,可以从网上下载.
 从网上下载github上的[websocket包](github.com/gorilla/websocket),在命令行上敲入
 ```
 go get github.com/gorilla/websocket
 ```
+
+## 第三方go包
+网上很多的go包都是运用cgo的技术生成的，比如常用gozmq包，了解下里面的原理，对于怎么在windows、linux上跨平台使用包很有帮助，不然这里面的坑就会把你玩死。
+cgo简单来说就是一种go调用c的技术，原理就是先写一层wrapper，再在里面调用c库，最后封装成go包。[详情](http://googollee.blog.163.com/blog/static/1159411201031812128593/)
+这里面需要注意，go包本身是跨平台的，但是里面实际掉用的c库确实不跨平台的（windows是windows的库，linux是linux的库，如果涉及到动态链接库，windows上需要在生成的go程序同级配套dll，linux需要配套so）
+github上的很多go包，在linux上安装可能很简单，比如[zmq4]（https://github.com/pebbe/zmq4）
+按照提示先下载libsodium源码，configure、make、make install ；再下载zmq源码configure、make、make install然后go get github.com/pebbe/zmq4,这样包就安装成功了。
+而在windows上，因为使用的cgo，要求在windows上安装一个gcc的编译环境，这里安装的mingw64，然后下载windos上的库，再把.h .lib 文件分别拷贝到mingw64安装目录的include，lib目录，还要把lib名字改成和.h名字对应的名字（zmq.h 对应zmq.lib），然后包才有可能安装成功。
+最后运行时，需要把dll或者so文件拷贝到go程序目录里。
+
+这里总结，纯go包跨平台，cgo不算跨平台。
+
 
 
 # 第三章 从写些小工具开始
