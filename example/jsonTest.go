@@ -6,8 +6,8 @@ import (
 )
 
 type Person struct {
-	Name string
-	Age  int
+	Name   string
+	Age    int
 	secret string
 }
 type Girl struct {
@@ -27,6 +27,5 @@ func main() {
 		fmt.Print(err)
 	}
 	fmt.Print(string(b))
-
 
 }

@@ -627,12 +627,12 @@ func httpGet() {
 package main
 
 import (
-	"flag"
-	"html/template"
-	"log"
-	"net/http"
+    "flag"
+    "html/template"
+    "log"
+    "net/http"
 
-	"github.com/gorilla/websocket"
+    "github.com/gorilla/websocket"
 )
 
 var addr = flag.String("addr", "localhost:8080", "http service address")
@@ -640,25 +640,25 @@ var addr = flag.String("addr", "localhost:8080", "http service address")
 var upgrader = websocket.Upgrader{} // use default options
 
 func echo(w http.ResponseWriter, r *http.Request) {
-	c, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		log.Print("upgrade:", err)
-		return
-	}
-	defer c.Close()
-	for {
-		mt, message, err := c.ReadMessage()
-		if err != nil {
-			log.Println("read:", err)
-			break
-		}
-		log.Printf("recv: %s", message)
-		err = c.WriteMessage(mt, message)
-		if err != nil {
-			log.Println("write:", err)
-			break
-		}
-	}
+    c, err := upgrader.Upgrade(w, r, nil)
+    if err != nil {
+        log.Print("upgrade:", err)
+        return
+    }
+    defer c.Close()
+    for {
+        mt, message, err := c.ReadMessage()
+        if err != nil {
+            log.Println("read:", err)
+            break
+        }
+        log.Printf("recv: %s", message)
+        err = c.WriteMessage(mt, message)
+        if err != nil {
+            log.Println("write:", err)
+            break
+        }
+    }
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -666,11 +666,11 @@ func home(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	flag.Parse()
-	log.SetFlags(0)
-	http.HandleFunc("/echo", echo)
-	http.HandleFunc("/", home)
-	log.Fatal(http.ListenAndServe(*addr, nil))
+    flag.Parse()
+    log.SetFlags(0)
+    http.HandleFunc("/echo", echo)
+    http.HandleFunc("/", home)
+    log.Fatal(http.ListenAndServe(*addr, nil))
 }
 
 var homeTemplate = template.Must(template.New("").Parse(`
@@ -787,10 +787,95 @@ func main() {
 
 [更多列子](https://github.com/voxelbrain/goptions)
 
+
+- zmq
+
+server
+```go
+
+package main
+
+import (
+    zmq "github.com/pebbe/zmq4"
+    "github.com/pebbe/zmq4/examples/kvsimple"
+
+    "fmt"
+    "math/rand"
+    "time"
+)
+
+func main() {
+    //  Prepare our context and publisher socket
+    publisher, _ := zmq.NewSocket(zmq.PUB)
+    publisher.Bind("tcp://*:5556")
+    time.Sleep(200 * time.Millisecond)
+
+    kvmap := make(map[string]*kvsimple.Kvmsg)
+    rand.Seed(time.Now().UnixNano())
+
+    sequence := int64(1)
+    for ; true; sequence++ {
+        //  Distribute as key-value message
+        kvmsg := kvsimple.NewKvmsg(sequence)
+        kvmsg.SetKey(fmt.Sprint(rand.Intn(10000)))
+        kvmsg.SetBody(fmt.Sprint(rand.Intn(1000000)))
+        err := kvmsg.Send(publisher)
+        kvmsg.Store(kvmap)
+        if err != nil {
+            break
+        }
+    }
+    fmt.Printf("Interrupted\n%d messages out\n", sequence)
+}
+
+```
+
+client
+
+```go
+
+package main
+
+import (
+    zmq "github.com/pebbe/zmq4"
+    "github.com/pebbe/zmq4/examples/kvsimple"
+
+    "fmt"
+)
+
+func main() {
+    //  Prepare our context and updates socket
+    fmt.Println("zmq test")
+    updates, _ := zmq.NewSocket(zmq.SUB)
+    updates.SetSubscribe("")
+    updates.Connect("tcp://localhost:5556")
+
+    kvmap := make(map[string]*kvsimple.Kvmsg)
+
+    sequence := int64(0)
+    for ; true; sequence++ {
+        kvmsg, err := kvsimple.RecvKvmsg(updates)
+        if err != nil {
+            break //  Interrupted
+        }
+        fmt.Println(kvmsg.GetBody())
+        kvmsg.Store(kvmap)
+    }
+    fmt.Printf("Interrupted\n%d messages in\n", sequence)
+}
+
+
+```
+
+
 - 更多知识点
 
 .() 接口类型断言  x.(y) 断言x中的条目实现了y
 
- [FAQ](http://docscn.studygolang.com/doc/faq#Google使用Go)
+- FAQ
 
- [中文站文档资料站](http://docscn.studygolang.com/doc/)
+    [FAQ](http://docscn.studygolang.com/doc/faq#Google使用Go)
+
+- 中文站
+
+    [中文站文档资料站](http://docscn.studygolang.com/doc/)
