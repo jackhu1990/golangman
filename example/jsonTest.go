@@ -12,7 +12,7 @@ type Person struct {
 }
 type Girl struct {
 	Person Person
-	Sex    bool
+	Sexy    bool
 }
 
 func main() {
