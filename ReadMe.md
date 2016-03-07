@@ -588,7 +588,7 @@ type Person struct {
 }
 type Girl struct {
 	Person Person
-	Sex    bool
+	Sexy    bool
 }
 
 func main() {
@@ -606,7 +606,7 @@ func main() {
 
 }
 
-{"Person":{"Name":"胡彦春","Age":18},"Sex":true}程序结束了
+{"Person":{"Name":"胡彦春","Age":18},"Sexy":true}程序结束了
 
 ```
 - httpServer
