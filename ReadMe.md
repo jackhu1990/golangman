@@ -325,6 +325,47 @@ func main() {
 {Little C 3 In the house}
 
 ```
+
+严格意义上来说,go没有属于结构体的函数.go函数有个特性,可以把函数归于任何类型(或任何类型的指针),相当于把函数的归属权付给了某人,某人可以直接调用函数.
+如上面的例子中,函数把归属权给了结构体指针,结构体就可以调用这个函数,同时在函数内部使用这个结构体(结构体的名字当作this指针用).
+另外,如果函数的归属的是结构体(而不是指针),那么结构体照样能用,但是结构体内部将不能修改外部(因为函数值传递时传递副本,而指针的副本解引用会是指向源对象)
+请仔细理解下面的例子,至关重要,请手敲一遍理解.
+
+```go
+
+package main
+
+import "fmt"
+
+type Handle int64
+func (h Handle) Show1(i int64) int64{
+    h = 1
+    return i + int64(h)
+}
+func (h *Handle) Show2(i int64) int64{
+    *h = 2
+    return i + int64(*h)
+}
+
+func main() {
+    var hand Handle = 0
+    fmt.Println(hand.Show1(100))
+    fmt.Println(hand)
+
+    fmt.Println(hand.Show2(100))
+    fmt.Println(hand)
+}
+
+101
+0
+102
+2
+
+```
+
+
+
+
 - interface
 go interface效果和java的interface,c++的抽象类相同,但是不用显示声明.
 go中规定,接口不用显示声明,结构体函数如果实现接口的函数,就相当于类继承了这个接口,请结合代码理解.
