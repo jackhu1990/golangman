@@ -1030,6 +1030,47 @@ go中并不存在传统上先include文件，然后引用的功能。任何定�
 
 好了，先把以前联系的代码都删了吧，让我们从真正的工程开始玩。
 
-进入GOPATH目录下，SRC目录下，建立一个新的文件夹：utility。
+进入GOPATH目录下，SRC目录下，建立一个新的文件夹：utility。也可以建立多层文件夹，这个随意。
+然后里面新建go文件，myFmt.go
 
-    
+```go
+
+package utility
+
+import "fmt"
+
+func Print(str string)  {
+    fmt.Println(str)
+}
+
+
+```
+
+ 回到GOPATH目录下，SRC目录下，新建一个文件夹： myProject
+ 然后里面建立go文件，main.go
+ ```go
+
+package main
+
+import (
+    "../utility"
+    //或者按GO最通常的写法
+    //"NodeHopeDaemon/utility"，这里面以GOPATH/SRC为基础目录的（概念上的）绝对路径
+)
+func main()  {
+    utility.Print("hello")
+
+}
+
+ 输出结果
+ hello
+
+ ```
+
+ 例如我的目录结构为
+ ![](img/package.png)
+
+ 还记得第一章说的GOPATH的理解问题吗，在这里就需要更正了，GOPATH不仅仅只是用来安装包，更常规的概念是当作工作区来用。
+
+
+
