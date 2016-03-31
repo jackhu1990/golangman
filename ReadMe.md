@@ -545,13 +545,9 @@ github上的很多go包，在linux上安装可能很简单，比如[zmq4]（http
 - 接口类型断言 .() 
     x.(y) 断言x中的条目实现了y
 
-## 快速问答
+## [FAQ](http://docscn.studygolang.com/doc/faq#Google使用Go)
 
-    [FAQ](http://docscn.studygolang.com/doc/faq#Google使用Go)
-
-## 中文站
-
-    [中文站文档资料站](http://docscn.studygolang.com/doc/)
+## [中文站文档资料站](http://docscn.studygolang.com/doc/)
 
 
 # 第三章 从写些小工具开始
@@ -621,6 +617,9 @@ func main() {
 {"Person":{"Name":"胡彦春","Age":18},"Sexy":true}程序结束了
 
 ```
+这里面加上一个json嵌套json字符串（json里面的字段类型是字符串，字符串内容是json），便于理解golang Json包的强大
+![json混合json](img/json混合json.png)
+
 - httpServer
 ```go
 
