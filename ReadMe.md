@@ -542,12 +542,10 @@ github上的很多go包，在linux上安装可能很简单，比如[zmq4]（http
 
 ## 更多知识点
 
-- .接口类型断言 .() 
-```
-	x.(y) 断言x中的条目实现了y
-```
+- 接口类型断言 .() 
+    x.(y) 断言x中的条目实现了y
 
-## FAQ
+## 快速问答
 
     [FAQ](http://docscn.studygolang.com/doc/faq#Google使用Go)
 
