@@ -1074,4 +1074,22 @@ func main()  {
  还记得第一章说的GOPATH的理解问题吗，在这里就需要更正了，GOPATH不仅仅只是用来安装包，更常规的概念是当作工作区来用。
 
 
+#第五章 编译
+go的核心优势是跨平台,在不使用cgo的前提下, go的代码是可以直接编译出不同平台,不同系统的可执行文件的,而且支持交叉编译.
 
+设置平台(x86或者x64)
+```
+SET GOARCH=386
+SET GOARCH=amd64
+```
+
+设置系统(windows或者mac或者linux)
+```
+SET GOOS=windows
+SET GOOS=linux
+SET GOOS=linux
+```
+运行编译命令
+```
+GO build test.go
+```
