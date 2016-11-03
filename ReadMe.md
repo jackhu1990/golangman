@@ -261,6 +261,49 @@ func main() {
 
 ```
 
+##interface{}
+interface{}是一个非常特殊，非常强大的通用类型。任何类型都可以赋值给interface{}类型。interface{}当然也可以在转换成其他的类型。
+以我的经验来看，interface{}被我使用最多是用来处理json的解析工作和容错处理。在传统的语言中，我们必须事先明确的知道json中value的值的类型，
+否则，我们就必须在解析的时候事先判断数据类型。总之，虽然可以处理，但也非常麻烦。
+- 使用interface{}接收
+
+```
+//这样再也不必要纠结value的具体类型，直接使用interface{}接受即可。
+type Point struct {
+	M string  `json:"measure"`
+	V interface{} `json:"vavlue"`
+	P int	`json:"type"`
+}
+
+ type PointsRT struct {
+ 	Topic string 	`json:"topic"`
+ 	St   int64	`json:"st"`
+ 	Data []Point	`json:"data"`
+ 	Ver  float64	`json:"ver"`
+ }
+
+var pointsRT PointsRT
+	//@todo json error
+	json.Unmarshal(message.Payload(), &pointsRT)
+
+```
+- 使用interface{}转化
+
+``
+		var pointsRT PointsRT; //构造发送结构
+		pointsRT.Topic = wsTopic;
+		pointsRT.St = time.Now().Unix()
+		pointsRT.Data = make([]Point, 0)
+		pointsRT.Data = append(pointsRT.Data, point)
+		pointsRT.Ver = 1.0
+		json, err := json.Marshal(pointsRT)
+		if err != nil {
+			log.Println("json err:", err)
+			continue
+		}
+
+```
+
 ## 函数
 - 定义
 ```go
@@ -1093,3 +1136,89 @@ SET GOOS=linux
 ```
 GO build test.go
 ```
+
+#第六章 数据类型转换
+
+数据类型转换经常用到，单独章节。
+
+##string 转换其他
+- float
+```
+        strconv.ParseFloat()
+```
+- int
+```
+        strconv.ParseInt()
+```
+- bool 
+```
+        strconv.ParseBool()
+```
+        
+##int 转换其他
+- string
+```
+        // 通过Itoa方法转换  
+        str1 := strconv.Itoa(i)  
+        // 通过Sprintf方法转换  
+        str2 := fmt.Sprintf("%d", i)  
+        // 通过FormatInt转换
+        str3 = strconv.FormatInt()
+```
+- float
+```
+        float(i)
+```
+- bool 
+```
+        bool(i)
+```
+
+##float 转换其他
+- string
+```
+        // 通过Itoa方法转换  
+        str1 := strconv.Itof(f)  
+        // 通过Sprintf方法转换  
+        str2 := fmt.Sprintf("%f", f)  
+        // 通过FormatInt转换
+        str3 = strconv.FormatFloat()
+```
+- int
+```
+        int(i)
+```
+- bool 
+```
+        bool(i)
+```
+
+##bool 转换其他
+- string
+```
+        // 通过Sprintf方法转换  
+        str2 := fmt.Sprintf("%d", b)  
+        // 通过FormatInt转换
+        str3 = strconv.FormatBool()
+```
+- int
+```
+        int(i)
+```
+- float 
+```
+        float(i)
+```
+
+##单独说下byte
+- byte转换string
+```
+    string(byte)
+```
+- byte转换int、bool、float
+使用encoding/binary包做转换
+
+- int、bool、float转换byte
+使用encoding/binary包做转换
+
+
