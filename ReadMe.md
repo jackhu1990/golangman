@@ -289,7 +289,7 @@ var pointsRT PointsRT
 ```
 - 使用interface{}转化
 
-``
+```
 		var pointsRT PointsRT; //构造发送结构
 		pointsRT.Topic = wsTopic;
 		pointsRT.St = time.Now().Unix()
