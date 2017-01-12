@@ -56,7 +56,7 @@ golang的包类似java的jar、c++的lib.golang的包管理类似nodejs的npm、
 ```go
 
 int8 int16 int32 int64
-uint8 uint16...
+uint8 uint16
 float32 float64
 string
 bool
@@ -126,7 +126,7 @@ m := map[int]string{1:"one", 2:"two"} //map
     和c有区别,在Go中，数组是值。
     将一个数组赋予另一个数组会复制其所有元素。so,若将某个数组传入某个函数，它将接收到该数组的一份副本而非指针。
     数组的大小是其类型的一部分。类型 [10]int 和 [20]int 是不同的。
-    array是固定分配,不可更改.在详细规划内存布局时，数组是非常有用的，有时还能避免过多的内存分配， 但它们主要用作切片的构件。
+    数组是固定分配,不可更改.在详细规划内存布局时，数组是非常有用的，有时还能避免过多的内存分配， 但它们主要用作切片的构件。
     切片保存了对底层数组的引用，若你将某个切片赋予另一个切片，它们会引用同一个数组。 若某个函数将一个切片作为参数传入，则它对该切片元素的修改对调用者而言同样可见， 这可以理解为传递了底层数组的指针。
     简单来说,数组是值,切片类似指针,指向数组.其他遵循值拷贝.
 
@@ -175,7 +175,7 @@ func main() {
 [详细信息](http://www.imooc.com/code/7555)
 
 - make
->内建函数 make(T, args) 的目的不同于 new(T)。它只用于创建切片、映射和信道，并返回类型为 T（而非 *T）的一个已初始化 （而非置零）的值。 出现这种用差异的原因在于，这三种类型本质上为引用数据类型，它们在使用前必须初始化。 例如，切片是一个具有三项内容的描述符，包含一个指向（数组内部）数据的指针、长度以及容量， 在这三项被初始化之前，该切片为 nil。对于切片、映射和信道，make 用于初始化其内部的数据结构并准备好将要使用的值。
+内建函数 make(T, args) 的目的不同于 new(T)。它只用于创建切片（slice）、映射(map)和(chan)，并返回类型为 T（而非 *T）的一个已初始化 （而非置零）的值。 出现这种用差异的原因在于，这三种类型本质上为引用数据类型，它们在使用前必须初始化。 例如，切片是一个具有三项内容的描述符，包含一个指向（数组内部）数据的指针、长度以及容量， 在这三项被初始化之前，该切片为 nil。对于切片、映射和信道，make 用于初始化其内部的数据结构并准备好将要使用的值。
 [详细信息](http://docscn.studygolang.com/doc/effective_go.html#make分配)
 
 ## 条件控制语句
@@ -261,12 +261,11 @@ func main() {
 
 ```
 
-##interface{}
+##interface{}类型
 interface{}是一个非常特殊，非常强大的通用类型。任何类型都可以赋值给interface{}类型。interface{}当然也可以在转换成其他的类型。
 以我的经验来看，interface{}被我使用最多是用来处理json的解析工作和容错处理。在传统的语言中，我们必须事先明确的知道json中value的值的类型，
 否则，我们就必须在解析的时候事先判断数据类型。总之，虽然可以处理，但也非常麻烦。
-- 使用interface{}接收
-
+- 使用interface{}接收json
 ```
 //这样再也不必要纠结value的具体类型，直接使用interface{}接受即可。
 type Point struct {
@@ -287,8 +286,7 @@ var pointsRT PointsRT
 	json.Unmarshal(message.Payload(), &pointsRT)
 
 ```
-- 使用interface{}转化
-
+- 使用interface{}转化json
 ```
 		var pointsRT PointsRT; //构造发送结构
 		pointsRT.Topic = wsTopic;
@@ -303,6 +301,31 @@ var pointsRT PointsRT
 		}
 
 ```
+
+判断interface{}实际存储的数据结构，并使用其中的数据
+```go
+//类型选择是类型转换的一种形式：它接受一个接口，在选择 （switch）中根据其判断选择对应的情况（case）， 并在某种意义上将其转换为该种类型。
+// 若它已经为字符串，我们需要该接口中实际的字符串值； 
+
+var jsonValue interface{} // 调用者提供的其他类型值,需要转换成接口类型。
+switch value := jsonValue.(type) {
+ case int:
+      fmt.Printf("value is %d\n", value)
+ case string:
+      fmt.Printf("value is %s\n", value)
+}
+
+```
+Comma-ok断言
+Go语言里面有一个语法，可以直接判断是否是该类型的变量： value, ok = element.(T)，这里value就是变量的值，ok是一个bool类型，element是interface变量，T是断言的类型。
+如果element里面确实存储了T类型的数值，那么ok返回true，否则返回false。
+```
+var jsonValue interface{} // 调用者提供的其他类型值,需要转换成接口类型。
+ if value, ok := jsonValue.(int); ok {
+            fmt.Printf("value is %d\n", value)
+        } 
+```
+
 
 ## 函数
 - 定义
@@ -337,11 +360,22 @@ func main() {
     第一个参数不能为0
 
 ```
-- error
-error可以假装理解为内置的类型(实际是接口),返回时errors.New("第一个参数不能为0")这样即可.
+- 对返回值进行预赋值
+go中可以使用命名返回值，可以直接在任意的地方给返回值赋值，在最终需要返回的地方直接return，返回值会自动加上
+```
+
+func Add(addA int, addB int) (result int, err error){
+    if addA==0 {
+        result = 0
+	err = errors.New("第一个参数不能为0")
+    }
+    result := addA + addB
+    return
+}
+```
 
 ## 这里没有类吗
-没有类,但是有结构体,有结构体函数.模拟类的功能.
+没有类,但是有结构体,有结构体函数（我喜欢这么叫）.结构体函数可以用来模拟类的功能.
 google官方编程规范规定,包和结构体中变量名大写表示对外暴露,小写表示不对外暴露.相当于其他语言共有私有标识.此规则很多第三方接口遵守,请也遵守.
 - 结构体函数
 ```go
@@ -410,8 +444,10 @@ func main() {
 
 
 - interface
-go interface效果和java的interface,c++的抽象类相同,但是不用显示声明.
-go中规定,接口不用显示声明,结构体函数如果实现接口的函数,就相当于类继承了这个接口,请结合代码理解.
+请注意interface和interface{}是两个东西
+interface是一组method的组合，我们通过interface来定义对象的一组行为。
+go interface效果和java的interface,c++的抽象类相同。
+go中接口的继承不用显示声明.go中规定,接口不用显示声明,结构体函数如果实现接口的函数,就相当于类继承了这个接口,请结合代码理解.
 ```go
 
 package main
@@ -445,21 +481,21 @@ func main() {
 true, &{Little C 3 In the house}
 
 ```
-- 接口的类型转换
-关于接口,"接口的类型转换"这个知识点请仔细理解.实例中还有switch特殊的类型选择用法.
+- 接口的类型转换高级用法
+interface{}可以转换成任何类型，自然也包括含有interce的类型（）
+关于"接口的类型转换"这个知识点请仔细理解.
 
 ```go
 //类型选择是类型转换的一种形式：它接受一个接口，在选择 （switch）中根据其判断选择对应的情况（case）， 并在某种意义上将其转换为该种类型。
 // 若它已经为字符串，我们需要该接口中实际的字符串值； 若它有 String 方法，我们则需要调用该方法所得的结果。
-type Stringer interface {
+type MyStringer interface{
 	String() string
 }
-
 var value interface{} // 调用者提供的其他类型值,需要转换成接口类型。
 switch str := value.(type) {
 case string:
 	return str
-case Stringer:
+case MyStringer:
 	return str.String()
 }
 
