@@ -1277,9 +1277,10 @@ import "C"
 - 字符数组：
     使用C.CString进行装换，但是要注意go的string是自动释放内存的，使用cgo需要手动释放。
     ```
-        var LastValue string = "你好"
-        csLastValue := C.CString(LastValue)
-    	defer C.free(unsafe.Pointer(csLastValue))
+    var LastValue string = "你好"
+    csLastValue := C.CString(LastValue)
+    defer C.free(unsafe.Pointer(csLastValue))
+
     ```
 ## xgo
 - docker
@@ -1289,6 +1290,7 @@ import "C"
     [xgo](https://github.com/karalabe/xgo)是封装好的docker镜像，内部继承了跨平台的编译环境。
     具体命令详见官网，我这里举个简单的工程例子：
     ![](img/docker.png)
+    我的编译命令为：
 ```
 docker run -it -v "$PWD"/build:/build -v "$PWD"/../:/go/src -v "$PWD":/go/src/NodeHopeIOAccessCross -e TARGETS=linux/arm-7 karalabe/xgo-latest NodeHopeIOAccessCross
 
