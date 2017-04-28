@@ -1133,9 +1133,8 @@ func Print(str string)  {
 package main
 
 import (
-    "../utility"
-    //或者按GO最通常的写法
-    //"NodeHopeDaemon/utility"，这里面以GOPATH/SRC为基础目录的（概念上的）绝对路径
+    "../utility" //相对用法不推荐
+    "NodeHopeDaemon/utility"// 推荐使用这种结构。这里面以GOPATH/SRC为基础目录的（概念上的）绝对路径
 )
 func main()  {
     utility.Print("hello")
@@ -1257,4 +1256,41 @@ GO build test.go
 - int、bool、float转换byte
 使用encoding/binary包做转换
 
+# 第七章 使用cgo与跨平台
+
+## cgo的使用
+```
+/*
+#cgo CFLAGS : -I./c
+#cgo LDFLAGS: -ldl
+#include "loader.c"
+
+*/
+import "C"
+```
+## cgo的数据类型
+- 普通数据类型：c中的数据类型直接对应，如c.int c.ulong c.char
+- 结构体：c中的struct XX 对应c.struct_XX
+- 空指针：unsafe.Pointer
+- 数组：pCmdBuf           [4096]C.uchar
+![](img/ctype.png)
+- 字符数组：
+    使用C.CString进行装换，但是要注意go的string是自动释放内存的，使用cgo需要手动释放。
+    ```
+        var LastValue string = "你好"
+        csLastValue := C.CString(LastValue)
+    	defer C.free(unsafe.Pointer(csLastValue))
+    ```
+## xgo
+- docker
+    docker是非常先进的技术，如果还没使用过，快去尝试吧。
+- 使用xgo进行跨平台编译
+    go本身是支持跨平台编译的，但是如果使用了cgo，需要安装gcc跨平台编译器。
+    [xgo](https://github.com/karalabe/xgo)是封装好的docker镜像，内部继承了跨平台的编译环境。
+    具体命令详见官网，我这里举个简单的工程例子：
+    ![](img/docker.png)
+```
+docker run -it -v "$PWD"/build:/build -v "$PWD"/../:/go/src -v "$PWD":/go/src/NodeHopeIOAccessCross -e TARGETS=linux/arm-7 karalabe/xgo-latest NodeHopeIOAccessCross
+
+```
 
